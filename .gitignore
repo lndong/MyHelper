@@ -1,0 +1,16 @@
+#不需要添加到版本控制的文件 #
+*.user
+*.Publish.xml
+bin/
+obj/
+*.pdb
+*.suo
+*.log
+*.orig
+*.pubxml
+log/*
+.vs/
+*.force
+*.cache
+applicationhost.config
+log
