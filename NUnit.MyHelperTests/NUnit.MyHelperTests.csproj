@@ -44,6 +44,8 @@
     <Compile Include="Extensions\EnumExtensionsTest.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTest.cs" />
     <Compile Include="Helper\AppSettingHelperTest.cs" />
+    <Compile Include="Helper\CacheTest.cs" />
+    <Compile Include="Helper\DateTimeHelperTest.cs" />
     <Compile Include="Helper\EncryptHelperTest.cs" />
     <Compile Include="Helper\StringHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

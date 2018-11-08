@@ -9,10 +9,10 @@ using Description = System.ComponentModel.DescriptionAttribute;
 
 namespace MyHelper.Extensions.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class EnumExtensionsTest
     {
-        [Test()]
+        [Test]
         public void GetDescriptionReturnStr()
         {
             var redDes = MyColor.Red.GetDescription();
@@ -21,7 +21,7 @@ namespace MyHelper.Extensions.Tests
 
             var greenDes = MyColor.Green.GetDescription();
             Assert.AreEqual("green", greenDes.ToLower());
-            Assert.Pass(greenDes);
+            //Assert.Pass(greenDes);
         }
 
         [Test]
