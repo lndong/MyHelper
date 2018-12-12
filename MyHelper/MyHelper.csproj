@@ -113,6 +113,7 @@
     <Compile Include="Helper\EmailHelper.cs" />
     <Compile Include="Helper\Log4netHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
+    <Compile Include="Helper\TimerHelper.cs" />
     <Compile Include="Helper\WeiXin\WeiXApi.cs" />
     <Compile Include="Helper\WeiXin\WeiXCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

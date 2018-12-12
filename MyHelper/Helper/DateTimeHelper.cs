@@ -50,5 +50,17 @@ namespace MyHelper.Helper
             var gc = new GregorianCalendar();
             return gc.GetWeekOfYear(dateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
+
+        /// <summary>
+        /// 计算两个时间之间的间隔返回整毫秒数
+        /// </summary>
+        /// <param name="oneTime">前一个时间</param>
+        /// <param name="otherTime">后一个时间</param>
+        /// <returns></returns>
+        public static double GetInervalTime(DateTime oneTime, DateTime otherTime)
+        {
+            var timeSpan = otherTime.Subtract(oneTime);
+            return timeSpan.TotalMilliseconds;
+        }
     }
 }
