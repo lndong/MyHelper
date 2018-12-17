@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--此xml文件属性更改为“始终复制”-->
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+  <schedule>
+    <!--配置作业-->
+    <job>
+      <!--作业名，同一分组内不能相同-->
+      <name>CronTask</name>
+      <!--作业分组名-->
+      <group>CronTaskGroup</group>
+      <!--作业描述-->
+      <description>Sample job for Quartz Server</description>
+      <!--指定作业实现类，格式为：命名空间.类名,程序集名称-->
+      <job-type>Quartz.Net.Test.CronTask, Quartz.Net.Test</job-type>
+      <!--表示作业是否长久（具体作用不明） 默认true-->
+      <durable>true</durable>
+      <!--恢复（具体作用不明）默认false-->
+      <recover>false</recover>
+    </job>
+    <!--触发器,同一个作业可以拥有多个触发器-->
+    <trigger>
+      <!--复杂触发器-->
+      <cron>
+        <!--触发器名-->
+        <name>CronTaskTrigger</name>
+        <!--触发器分组名-->
+        <group>CronTaskTriggerGroup</group>
+        <!--要调度的作业名-->
+        <job-name>CronTask</job-name>
+        <!--要调度的作业的分组名-->
+        <job-group>CronTaskGroup</job-group>
+        <!--start-time节点开始作业的utc时间，北京时间需要+08:00，。注意：服务启动或重启时都会检测此属性。
+        若没有设置此属性，服务会根据 cron-expression 的规则执行作业调度；
+        若 start-time 的时间小于当前时间，服务启动后会忽略 cron-expression 的设置，
+        立即执行一次调度，之后再根据 cron-expression 执行作业调度；
+        若大于当前时间，服务会等到当前时间等于 start-time 的时间才开始执行，
+        并根据 cron-expression 执行作业调度。如果没有特殊要求，可以忽略该属性
+        <start-time>2018-12-14T08:00:00+08:00</start-time>-->
+        <!--cron表达式-->
+        <cron-expression>0/30 * * * * ?</cron-expression>
+      </cron>
+    </trigger>
+    <trigger>
+      <!--简单的触发器-->
+      <simple>
+        <!--触发器名-->
+        <name>simpleTaskTrigger</name>
+        <!--触发器分组名-->
+        <group>simpleTaskTriggerGroup</group>
+        <!--描述-->
+        <description>CronTask job trigger</description>
+        <!--要调度的作业名-->
+        <job-name>CronTask</job-name>
+        <!--要调度的作业的分组名-->
+        <job-group>CronTaskGroup</job-group>
+        <!--<misfire-instruction>SmartPolicy</misfire-instruction>-->
+        <!--开始作业的 utc 时间，北京时间需要+08:00,注意：服务启动或重启时都会检测此属性。
+        若没有设置此属性或者 start-time 的时间小于当前时间，服务启动后会立即执行一次调度；
+        若大于当前时间，服务会等到当前时间等于 start-time 的时间才开始执行。如果没有特殊要求，可以忽略该属性。
+        <start-time>2018-12-14T00:00:00+08:00</start-time>
+        -->
+        <!--作业重复次数，-1表示无限制重复执行，2表示作业重复执行二次(要注意程序启动时会自动执行一次，这样总就三次);-->
+        <repeat-count>2</repeat-count>
+        <!--作业触发间隔时间，单位：毫秒-->
+        <repeat-interval>30000</repeat-interval>
+      </simple>
+    </trigger>
+
+    <job>
+      <name>SimpleTask</name>
+      <group>SimpleTaskGroup</group>
+      <description>一个简单任务</description>
+      <job-type>Quartz.Net.Test.SimpleTask,Quartz.Net.Test</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+      <!--数据对象，可以在Execute方法中获取到，context.JobDetail.JobDataMap["Msg"]-->
+      <job-data-map>
+        <entry>
+          <key>Msg</key>
+          <value>上酸菜</value>
+        </entry>
+        <entry>
+          <key>User</key>
+          <value>翠花</value>
+        </entry>
+      </job-data-map>
+    </job>
+    <trigger>
+      <simple>
+        <name>SimpleTaskTrigger</name>
+        <group>SimpleTaskTriggerGroup</group>
+        <description>简单任务触发器</description>
+        <job-name>SimpleTask</job-name>
+        <job-group>SimpleTaskGroup</job-group>
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <!---1为无限次数执行 3为执行3次（加上程序启动就执行的一次一共是四次）-->
+        <repeat-count>-1</repeat-count>
+        <!--重复执行时间间隔 毫秒单位-->
+        <repeat-interval>30000</repeat-interval>
+      </simple>
+    </trigger>
+  </schedule>
+</job-scheduling-data>
