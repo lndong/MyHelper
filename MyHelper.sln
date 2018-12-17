@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeTest", "QRCodeTest\QR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.Net.Test", "Quartz.Net.Test\Quartz.Net.Test.csproj", "{A36651C4-31A3-41C7-A54E-C1DF284FC66A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopShelfTest", "TopShelfTest\TopShelfTest.csproj", "{AC5CB931-8451-4ED4-920D-DCE5213C3C62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A36651C4-31A3-41C7-A54E-C1DF284FC66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A36651C4-31A3-41C7-A54E-C1DF284FC66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A36651C4-31A3-41C7-A54E-C1DF284FC66A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC5CB931-8451-4ED4-920D-DCE5213C3C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC5CB931-8451-4ED4-920D-DCE5213C3C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC5CB931-8451-4ED4-920D-DCE5213C3C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC5CB931-8451-4ED4-920D-DCE5213C3C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
