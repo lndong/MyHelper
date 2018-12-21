@@ -26,13 +26,13 @@ namespace TopShelfTest
 
             #region 方式一
 
-            //GetHostNoTopShelf().Run();
+            GetHostNoTopShelf().Run();
 
             #endregion
 
             #region 方式二
 
-            HostRun();
+            //HostRun();
 
             #endregion
 
@@ -54,7 +54,7 @@ namespace TopShelfTest
                 });
                 o.RunAsLocalSystem(); //使用本子系统账号来运行
                 o.SetServiceName("FirstTestService"); //服务名称
-                o.SetDisplayName("TopShelf日志服务"); //显示名称
+                o.SetDisplayName("TopShOKelf日志服务"); //显示名称
                 o.SetDescription("自定义服务类"); //服务描述
             });
             return host;

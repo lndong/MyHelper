@@ -12,14 +12,14 @@ namespace MyHelper.Helper
     /// </summary>
     public class AppSettingHelper
     {
-        private static readonly NameValueCollection appSetting;
+        private static readonly NameValueCollection AppSetting;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         static AppSettingHelper()
         {
-            appSetting = WebConfigurationManager.AppSettings;
+            AppSetting = WebConfigurationManager.AppSettings;
         }
 
         #region 返回string
@@ -88,7 +88,7 @@ namespace MyHelper.Helper
         /// <returns></returns>
         public static T GetValue<T>(string key, CustomFunc<T> parseValue, T? defaultValue) where T : struct
         {
-            var value = appSetting[key];
+            var value = AppSetting[key];
             if (value != null)
             {
                 if (parseValue(value, out var resValue))
@@ -156,7 +156,7 @@ namespace MyHelper.Helper
         /// <returns></returns>
         private static string GetValue(string key, bool valueRequied, string defaultValue)
         {
-            var value = appSetting[key];
+            var value = AppSetting[key];
 
             if (value != null)
             {
