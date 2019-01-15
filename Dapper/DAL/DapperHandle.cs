@@ -41,7 +41,29 @@ namespace Dapper.DAL
         }
 
         /// <summary>
-        /// 查询
+        /// 更新
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public int Upadate(UserInfo info)
+        {
+            var sql = "UPDATE UserInfo SET UserName=@UserName,Account=@Account ,LastModiTime=@LastModiTime WHERE UserId = @UserId";
+            return Conn.Execute(sql, info);
+        }
+
+        /// <summary>
+        /// 根据主键删除
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public int Delete(UserInfo info)
+        {
+            var sql = "DELETE UserInfo Where UserId = @UserId";
+            return Conn.Execute(sql, new { info.UserId });
+        }
+
+        /// <summary>
+        /// 查询列表
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UserInfo> GetInfos()
@@ -50,13 +72,20 @@ namespace Dapper.DAL
             return Conn.Query<UserInfo>(sql);
         }
 
-        #endregion
-
+        /// <summary>
+        /// 根据条件查询
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public UserInfo GetInfo(string userName)
         {
             var sql = "SELECT * FROM UserInfo WHERE userName = @userName";
-            return Conn.QueryFirstOrDefault<UserInfo>(sql, new {userName});
+            return Conn.QueryFirstOrDefault<UserInfo>(sql, new { userName });
         }
+
+        #endregion
+
+
 
         #region DapperExtension
 

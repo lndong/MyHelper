@@ -1,0 +1,113 @@
+﻿@model ModelValid.Models.UserInfo
+
+@{
+    ViewBag.Title = "注册";
+}
+
+@using (Ajax.BeginForm("SaveInfo", "User",new {area=""}, new AjaxOptions {HttpMethod = "POST", OnBegin = "onBeginMethod", OnSuccess = "onSuccessMethod"}, new {@id = "rForm"}))
+{
+    @Html.AntiForgeryToken()
+    ;
+    <div>
+        @Html.DisplayNameFor(m => m.Account)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.TextBoxFor(m => m.Account)
+        @Html.ValidationMessageFor(m => m.Account, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        @Html.DisplayNameFor(m => m.Password)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.PasswordFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        @Html.DisplayNameFor(m => m.UserName)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.TextBoxFor(m => m.UserName)
+        @Html.ValidationMessageFor(m => m.UserName, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        @Html.DisplayNameFor(m => m.Gender)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.DropDownListFor(m => m.Gender, ViewBag.GenderList as SelectList)
+        @Html.ValidationMessageFor(m => m.Gender, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        @Html.DisplayNameFor(m => m.Phone)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.TextBoxFor(m => m.Phone)
+        @Html.ValidationMessageFor(m => m.Phone, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        @Html.DisplayNameFor(m => m.Email)
+        ：&nbsp;&nbsp;&nbsp;
+        @Html.TextBoxFor(m => m.Email)
+        @Html.ValidationMessageFor(m => m.Email, "", new {style = "color:red;font-size:14px;"})
+    </div>
+    <div>
+        <input type="submit" id="btnSub" value="提交"/>
+    </div>
+}
+
+@section ScriptFooter
+{
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    @*使用ajax.BeginForm必须添加此js,且需在jquery下面引用*@
+    <script src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @*启用页面验证需要引用此两个js*@
+    @*通过NuGet安装：Install-Package jQuery.Validation.Unobtrusive -Version 2.0.20710*@
+    <script src="/Scripts/jquery.validate.min.js"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        //ajax提交前方法，一般可以禁用提交按钮，防止多次提交
+        function onBeginMethod() {
+            console.log("aa");
+            $("#btnSub").attr("disabled", true);
+        }
+
+        function onSuccessMethod(data) {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                if (data.ModelStateErrors != null) {
+                    $("#rForm").validate().showErrors(data.ModelStateErrors);  //展示验证错误信息
+                }
+            }
+        }
+
+        /**
+        * 后台自定义模型验证JS验证扩展
+        */
+
+        //notcompare扩展
+        jQuery.validator.addMethod('notcompare',
+            function(value, element, param) {
+                return this.optional(element) || value !== $(param).val();
+            });
+        jQuery.validator.unobtrusive.adapters.add('notcompare',
+            ['other'],
+            function(options) {
+                options.rules['notcompare'] = '#' + options.params.other; //额外参数，此处是需要对比的元素的id字符串
+                if (options.message) {
+                    options.messages['notcompare'] = options.message;
+                }
+            });
+
+        //gender  gendernull为扩展验证规则方法名
+        jQuery.validator.addMethod('gendernull',
+            function(value, element) {
+                return this.optional(element) || value != "0";
+            }
+        );
+        jQuery.validator.unobtrusive.adapters.add('gendernull',
+            function(options) {
+                options.rules["gendernull"] = true;
+                if (options.message) {
+                    options.messages['gendernull'] = options.message;
+                }
+            });
+
+        /*-------------------------------------------------------------------------------------------------------*/
+    </script>
+}

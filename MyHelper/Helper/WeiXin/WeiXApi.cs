@@ -5,29 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
+using MyHelper.Caches;
 
 namespace MyHelper.Helper.WeiXin
 {
    public class WeiXApi
-    {
+   {
+       private static readonly ICache CacheHelper;
+
+       private static readonly TimeSpan Time = new TimeSpan(2, 0, 0); //缓存时间间隔
+
+       static WeiXApi()
+       {
+           CacheHelper = new HttpCache();
+       }
 
         /// <summary>
-        /// 从session中获取ticket，没有则从微信api中获取，并保存到session中
+        /// 从cache中获取ticket，没有则从微信api中获取，并保存到cache中
         /// </summary>
         /// <param name="appId">appId</param>
         /// <param name="appSecret"></param>
         /// <returns></returns>
-        public static string GetTicketSession(string appId, string appSecret)
+        public static string GetTicketCache(string appId, string appSecret)
         {
             var ticket = "";
-            if (HttpContext.Current.Session["jsapi_ticket"] == null)
+            var cacheTicket = CacheHelper.GetCache("jsapi_ticket");
+            if (cacheTicket == null)
             {
-                var token = GetTokenSession(appId, appSecret);
+                var token = GetTokenCache(appId, appSecret);
                 ticket = string.IsNullOrEmpty(token) ? "" : GetTicket(token);
             }
             else
             {
-                ticket = HttpContext.Current.Session["jsapi_ticket"].ToString();
+                ticket = cacheTicket.ToString();
             }
             return ticket;
         }
@@ -38,18 +48,12 @@ namespace MyHelper.Helper.WeiXin
         /// <param name="appId"></param>
         /// <param name="appSecret"></param>
         /// <returns></returns>
-        private static string GetTokenSession(string appId, string appSecret)
+        private static string GetTokenCache(string appId, string appSecret)
         {
-            var tokenSession = "";
-            if (HttpContext.Current.Session["SessionAccessToken"] == null)
-            {
-                tokenSession = GetToken(appId, appSecret);
-            }
-            else
-            {
-                tokenSession = HttpContext.Current.Session["SessionAccessToken"].ToString();
-            }
-            return tokenSession;
+            var token = "";
+            var cacheToken = CacheHelper.GetCache("AccessToken");
+            token = cacheToken == null ? GetToken(appId, appSecret) : cacheToken.ToString();
+            return token;
         }
 
        
@@ -70,8 +74,7 @@ namespace MyHelper.Helper.WeiXin
                 var jss = new JavaScriptSerializer();
                 var resDic = (Dictionary<string, object>)jss.DeserializeObject(result);
                 var token = resDic["access_token"].ToString();
-                HttpContext.Current.Session["SessionAccessToken"] = token;
-                HttpContext.Current.Session.Timeout = 7200;
+                CacheHelper.SetCache("AccessToken", token, Time, ExpireType.Absolute);
                 Log4netHelper.Info(token);
                 return token;
             }
@@ -99,8 +102,7 @@ namespace MyHelper.Helper.WeiXin
                 var jss = new JavaScriptSerializer();
                 var resDic = (Dictionary<string, object>)jss.DeserializeObject(result);
                 var ticket = resDic["ticket"].ToString();
-                HttpContext.Current.Session["jsapi_ticket"] = ticket;
-                HttpContext.Current.Session.Timeout = 7200;
+                CacheHelper.SetCache("jsapi_ticket", ticket, Time, ExpireType.Absolute);
                 Log4netHelper.Info(resDic);
                 Log4netHelper.Info(ticket);
                 return ticket;

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopShelfTest", "TopShelfTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperSample", "Dapper\DapperSample.csproj", "{6E1A071E-06EE-4EBF-ADA4-12D6ACCAE20E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelValid", "ModelValid\ModelValid.csproj", "{41D8AF71-BCF7-4C91-9BCE-88EAEF3B520F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6E1A071E-06EE-4EBF-ADA4-12D6ACCAE20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E1A071E-06EE-4EBF-ADA4-12D6ACCAE20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E1A071E-06EE-4EBF-ADA4-12D6ACCAE20E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41D8AF71-BCF7-4C91-9BCE-88EAEF3B520F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41D8AF71-BCF7-4C91-9BCE-88EAEF3B520F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41D8AF71-BCF7-4C91-9BCE-88EAEF3B520F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41D8AF71-BCF7-4C91-9BCE-88EAEF3B520F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

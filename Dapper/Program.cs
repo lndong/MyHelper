@@ -30,15 +30,39 @@ namespace DapperSample
             //}
 
             //Console.WriteLine(helper.Add(list.Skip(5).ToList()));
+            //helper.Add(list[0]);
+            //helper.Add(list.Skip(8).ToList());
+            #endregion
+
+            var userInfo = helper.GetInfo("Dapper0");
+            #region 更新
+
+            //if (userInfo != null)
+            //{
+            //    userInfo.UserName = "Dappera";
+            //    userInfo.Account = "Dappera";
+            //    userInfo.LastModiTime = DateTime.Now;
+            //    helper.Upadate(userInfo);
+            //}
 
             #endregion
 
-            //helper.Add(list[0]);
-            //helper.Add(list.Skip(8).ToList());
+            #region 删除
 
-            Console.WriteLine(helper.GetInfo("Dapper8").UserId);
-            Console.WriteLine(helper.GetInfos().Count());
-            Console.WriteLine(helper.GetInfosExtension().Count());
+            if (userInfo != null)
+            {
+                Console.WriteLine(helper.Delete(userInfo));
+            }
+
+            #endregion
+
+            #region 查询
+            //Console.WriteLine(helper.GetInfo("Dapper8").UserId);
+            //Console.WriteLine(helper.GetInfos().Count());
+            //Console.WriteLine(helper.GetInfosExtension().Count());
+            #endregion
+
+
 
             Console.ReadKey();
         }
