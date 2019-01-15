@@ -1,0 +1,169 @@
+﻿@model WeiXinApi.Test.Models.JsSdkModel
+@{
+    ViewBag.Title = "上传照片";
+}
+
+<div>
+    <input type="button" value="选择照片" id="chooseImage" />
+    <input type="button" value="上传到微信服务器" id="uploadWxImage" />
+    <input type="button" value="从微信服务器下载图片" id="downloadImage" />
+    <input type="button" value="预览图片" id="previewImage" />
+    <input type="button" value="上传图片到本地服务器" id="uploadImageToLocal" />
+    <div id="imageDiv"></div>
+</div>
+
+
+@section scriptFooter
+{
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    @*手机端查看元素JS*@
+    <script src="//cdn.bootcss.com/eruda/1.5.2/eruda.min.js"></script>
+    <script>
+        eruda.init();
+        wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@Model.AppId', // 必填，公众号的唯一标识
+            timestamp: '@Model.Timestamp', //必填，生成签名的时间戳
+            nonceStr: '@Model.NonceStr', // 必填，生成签名的随机串
+            signature: '@Model.Signature', // 必填，签名
+            jsApiList: [
+                'chooseImage',
+                'previewImage',
+                'uploadImage',
+                'downloadImage',
+                'updateAppMessageShareData',
+                'updateTimelineShareData'
+            ] // 必填，需要使用的JS接口列表
+        });
+
+        //如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        wx.ready(function () {
+
+            //经测试：updateAppMessageShareData和updateTimelineShareData在ios上正常，安卓无效，分享继续使用旧版接口，参数配置跟新接口一样
+
+            //自定义“分享给朋友”及“分享到QQ”按钮的分享内容（1.4.0）
+            wx.updateAppMessageShareData({
+                title: '测试', // 分享标题
+                desc: '测试的玩一玩', // 分享描述
+                link: 'http://active.ebssign.com/Image/index', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: 'http://active.ebssign.com/Content/Images/pig.png', // 分享图标
+                success: function() {
+                    // 设置成功
+                    console.log("分享ok");
+                }
+            });
+
+            //自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容（1.4.0）
+            wx.updateTimelineShareData({
+                title: '测试', // 分享标题
+                link: 'http://active.ebssign.com/Image/index', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: 'http://active.ebssign.com/Content/Images/pig.png', // 分享图标
+                success: function () {
+                    // 设置成功
+                    console.log("朋友圈分享ok");
+                }
+            });
+        });
+
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+        wx.error(function(res) {
+            console.log(res);
+        });
+
+        //照片对象
+        var image = {
+            localIds: [],
+            ServiceIds: [],
+            downloadLocalIds: []
+        };
+
+        //选择本地图片或者拍照获取一个本地图片Id
+        $("#chooseImage").click(function() {
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    console.log(localIds);
+                    image.localIds.push(localIds);
+                    $.each(localIds,
+                        function(i, n) {
+                            var img = '<img src="' + n + '"/><br />';
+                            $("#imageDiv").append(img);
+                        });
+                }
+            });
+            console.log(image);
+        });
+
+        //把图片上传到微信服务器，临时保存三天，参数为选择图片时微信返回的本地图片localId，上传成功返回服务器图片serverId
+        //如果需要把图片保存到自己服务器，则需要调用下载临时素材接口获取图片流（参数为access_token+服务器图片serverId）进行本地服务器存储
+        $("#uploadWxImage").click(function() {
+            for (var i = 0; i < image.localIds.length; i++) {
+                console.log(image.localIds[i]);
+                wx.uploadImage({
+                    localId: image.localIds[i].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得 此处需要使用toString()方法强转Id为字符串
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function(res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
+                        image.ServiceIds.push(serverId);
+                    },
+                    fail: function(res) {
+                        console.log(res);
+                    }
+                });
+            }
+        });
+
+        //从微信服务器下载图片并展示
+        $("#downloadImage").click(function() {
+            $("#imageDiv").empty();
+            $.each(image.ServiceIds,
+                function(i, n) {
+                    wx.downloadImage({
+                        serverId: n, // 需要下载的图片的服务器端ID，由uploadImage接口获得
+                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                        success: function(res) {
+                            var localId = res.localId; // 返回图片下载后的本地ID
+                            var img = '<img src="' + localId + '"/><br />';
+                            $("#imageDiv").append(img);
+                            image.downloadLocalIds.push(localId);
+                        }
+                    });
+                });
+            console.log(image);
+        });
+
+        var previewImages = [
+            "https://cert.ebs.org.cn/Content/Tuv/images/enterprise/QYSF302018122100015115/Business/1.jpg",
+            "https://cert.ebs.org.cn/Content/Tuv/images/enterprise/QYSF302018122100015115/Special/2.jpg"
+        ];
+
+        //预览图片
+        $("#previewImage").click(function() {
+            wx.previewImage({
+                current:
+                    'https://cert.ebs.org.cn/Content/Tuv/images/enterprise/QYSF302018122100015115/Business/1.jpg', // 当前显示图片的http链接
+                urls: previewImages // 需要预览的图片http链接列表
+            });
+        });
+
+        //把图片从微信服务器下载到本地服务器
+        $("#uploadImageToLocal").click(function() {
+            var mediaIds = image.ServiceIds.join(";");
+            console.log(mediaIds);
+            $.ajax({
+                url: '@Url.Action("SaveInfo", "Image")',
+                type: 'Get',
+                data: { "mediaIds": mediaIds },
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+    </script>
+}
+
