@@ -34,7 +34,7 @@ namespace MyHelper.WeiXin.WeiXinApi
             catch (Exception ex)
             {
                 var msg = "调用下载临时素材微信api接口发生异常：";
-                return (Stream)ExceptionHelper.WriteExLogRNull(msg, ex);
+                return ExceptionHelper.WriteLogReturn<Stream>(msg, ex, null);
             }
         }
     }

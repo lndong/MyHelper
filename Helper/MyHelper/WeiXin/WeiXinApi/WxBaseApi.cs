@@ -32,7 +32,7 @@ namespace MyHelper.WeiXin.WeiXinApi
             catch (Exception ex)
             {
                 var msg = "调用微信api获取access_token异常：" + ex.Message;
-                return ExceptionHelper.WriteExLogRNull(msg, ex)?.ToString();
+                return ExceptionHelper.WriteLogReturn<string>(msg, ex, null);
             }
         }
 
@@ -70,7 +70,7 @@ namespace MyHelper.WeiXin.WeiXinApi
                 Log4netHelper.Info("微信接口返回结果：" + result);
                 var msg = "获取openId发生异常：" + ex.Message;            
                 accessToken = "";
-                return ExceptionHelper.WriteExLogRNull(msg, ex)?.ToString();
+                return ExceptionHelper.WriteLogReturn<string>(msg, ex, null);
             }
         }
 
@@ -94,8 +94,7 @@ namespace MyHelper.WeiXin.WeiXinApi
             catch (Exception ex)
             {
                 var msg = "获取用户信息发生异常：" + ex.Message;
-                ExceptionHelper.WriteExlogVoid(msg, ex);
-                return null;
+                return ExceptionHelper.WriteLogReturn<JObject>(msg, ex, null);
             }
         }
     }
