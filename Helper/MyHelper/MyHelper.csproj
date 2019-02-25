@@ -116,7 +116,6 @@
     <Compile Include="Helper\IamgeHelper.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
     <Compile Include="Helper\Log4netHelper.cs" />
-    <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\TimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeiXin\WeiXinCommon\Util.cs" />

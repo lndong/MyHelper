@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyHelper.Helper;
+using MyHelper.Extensions;
 
 namespace NUnit.MyHelperTests.Helper
 {
@@ -16,9 +16,9 @@ namespace NUnit.MyHelperTests.Helper
         {
             // TODO: Add your test code here
             var str = "aaa";
-            var res = StringHelper.Base64Encode(str);
+            var res = str.Base64Encode();
             Console.WriteLine(res);
-            var resStr = StringHelper.Base64Decode(res);
+            var resStr = res.Base64Decode();
             Console.WriteLine(resStr);
             Assert.AreEqual(str,resStr);
         }
