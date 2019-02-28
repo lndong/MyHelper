@@ -107,6 +107,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helper\AppSettingHelper.cs" />
+    <Compile Include="Helper\CaptchaHelper.cs" />
     <Compile Include="Helper\DateTimeHelper.cs" />
     <Compile Include="Helper\EncryptHelper.cs" />
     <Compile Include="Helper\ExceptionHelper.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Helper\HttpWebHelper.cs" />
     <Compile Include="Helper\IamgeHelper.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
+    <Compile Include="Helper\ImageCodeHelper.cs" />
     <Compile Include="Helper\Log4netHelper.cs" />
     <Compile Include="Helper\TimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

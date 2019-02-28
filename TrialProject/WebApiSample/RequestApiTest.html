@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>获取验证码</title>
+</head>
+<body>
+    <img  id="code"  onclick="GetCode()"/>
+    <script>
+        window.onload = GetCode;
+        function GetCode(){
+            var url = "http://localhost:24976/api/verifyCode/imageCode?length=4"
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET',url,true);
+            xhr.responseType = 'blob',
+            xhr.setRequestHeader('client_type','DESKTOP_WEB');
+            xhr.onload = function(){
+                if(this.status==200){
+                    var blob = this.response;
+                    var img = document.querySelector("#code");
+                    img.onload = function(e){
+                        window.URL.revokeObjectURL(img.src);
+                    };
+                    img.src = window.URL.createObjectURL(blob); 
+                }
+            }
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
