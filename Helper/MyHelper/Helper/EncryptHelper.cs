@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using Org.BouncyCastle.Crypto;
@@ -76,6 +77,31 @@ namespace MyHelper.Helper
         public static string Sha1Encrypt(string input, Encoding encoding)
         {
             return HashEncrypt(SHA1.Create(), input, encoding);
+        }
+
+        #endregion
+
+        #region  计算文件的hash值(使用sha1)
+
+        /// <summary>
+        /// 计算文件的hash值
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string ComputeFileHash(string filePath)
+        {
+            var hashRes = string.Empty;
+            if (File.Exists(filePath))
+            {
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    var sha1 = SHA1.Create();
+                    var buff = sha1.ComputeHash(fs);
+                    hashRes = BitConverter.ToString(buff).Replace("-", "");
+                }
+            }
+
+            return hashRes;
         }
 
         #endregion

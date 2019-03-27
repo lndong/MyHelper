@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace MyHelper.Helper
 {
     /// <summary>
-    /// 文件帮助类，把信息写入本子文本中
+    /// 文件帮助类，把信息写入本地文本中
     /// </summary>
     public class FileHelper
     {

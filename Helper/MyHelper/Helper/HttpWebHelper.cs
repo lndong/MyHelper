@@ -65,8 +65,8 @@ namespace MyHelper.Helper
         /// <summary>
         /// GET请求
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="param"></param>
+        /// <param name="url">请求url</param>
+        /// <param name="param">参数集合</param>
         /// <returns></returns>
         public static string Get(string url, Dictionary<string, object> param)
         {
@@ -78,8 +78,20 @@ namespace MyHelper.Helper
         /// <summary>
         /// Post请求
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="body"></param>
+        /// <param name="url">请求url</param>
+        /// <param name="param">参数集合</param>
+        /// <returns></returns>
+        public static string Post(string url, Dictionary<string, object> param)
+        {
+            var body = CreateParameter(param);
+            return RequestData("post", url, body, "application/x-www-form-urlencoded");
+        }
+
+        /// <summary>
+        /// Post请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="body">参数拼接字符串（key1=value1&key2=value2）</param>
         /// <returns></returns>
         public static string Post(string url,string body)
         {
@@ -287,6 +299,36 @@ namespace MyHelper.Helper
                     StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
                     var resData = reader.ReadToEnd();
                     return resData;
+
+                    #region 接收流文件，把流文件保存到指定目录
+
+                    //var responseContentType = response.ContentType;
+                    //if (!string.IsNullOrEmpty(responseContentType) &&
+                    //    responseContentType.ToLower().Contains("application/octet-stream"))
+                    //{
+                    //    var fileNameEncode = response.Headers["Content-Disposition"].Split(new []{ "filename=" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    //    var fileName = string.Empty;
+                    //    if (!string.IsNullOrEmpty(fileNameEncode))
+                    //    {
+                    //        fileName = HttpUtility.UrlDecode(fileNameEncode);//url解码，获取文件名
+                    //    }
+
+                    //    var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+
+                    //    //创建文件流把文件写入指定目录
+                    //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    //    {
+                    //        var buff = new byte[1024 * 1024];
+                    //        var size = responseStream.Read(buff, 0, buff.Length);
+                    //        while (size > 0)
+                    //        {
+                    //            fileStream.Write(buff,0,size);
+                    //            size = responseStream.Read(buff, 0, buff.Length);
+                    //        }
+                    //    }
+                    //}
+
+                    #endregion
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace MyHelper.Helper
         private FtpWebRequest _reqFtp; //文件传输客户端
 
         /// <summary>
-        ///     构造函数
+        /// 构造函数
         /// </summary>
         /// <param name="ftpIp"></param>
         /// <param name="ftpUser"></param>
@@ -26,7 +26,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     根据文件夹地址拼接ftpURI地址
+        /// 根据文件夹地址拼接ftpURI地址
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     连接ftp
+        /// 连接ftp
         /// </summary>
         /// <param name="uri"></param>
         private void Connect(string uri)
@@ -47,7 +47,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     上传
+        /// 上传
         /// </summary>
         /// <param name="path">文件夹目录</param>
         /// <param name="files">文件byte</param>
@@ -95,8 +95,8 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     删除指定文件夹
-        ///     注意：文件夹必须是空文件夹，否则会删除失败，必须先删除文件夹里面的文件
+        /// 删除指定文件夹
+        /// 注意：文件夹必须是空文件夹，否则会删除失败，必须先删除文件夹里面的文件
         /// </summary>
         /// <param name="dirName"></param>
         public void DeleteDir(string dirName)
@@ -116,7 +116,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     删除指定文件
+        /// 删除指定文件
         /// </summary>
         /// <param name="fileName">文件目录字符串</param>
         public void DeleteFileName(string fileName)
@@ -136,7 +136,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     获取目录文件夹下的所有文件夹
+        /// 获取目录文件夹下的所有文件夹
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -181,7 +181,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     创建文件夹(没有创建，有则直接返回)
+        /// 创建文件夹(没有创建，有则直接返回)
         /// </summary>
         /// <param name="path"></param>
         private void CreateDir(string path)
@@ -205,7 +205,7 @@ namespace MyHelper.Helper
         }
 
         /// <summary>
-        ///     获取文件夹目录
+        /// 获取文件夹目录
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
