@@ -148,68 +148,39 @@ namespace MyHelper.Helper
         /// <returns></returns>
         public static string Post(string url, Dictionary<string, string> body, HttpFileCollectionBase files)
         {
-            var memoryStream = new MemoryStream(); //内存流，把参数和文件先放入内存流中暂存（视情况使用此流）
+            //内存流，把参数和文件先放入内存流中暂存（视情况使用此流）
+            //也可以直接写入requestStream流中，计算好request.ContentLength
+            var memoryStream = new MemoryStream(); 
             //1.分界线时间戳(每个参数以及文件都用此分界线分隔原因暂不了解)
             var strBoundary = "----------" + DateTime.Now.Ticks.ToString("x");
             var boundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + strBoundary + "--\r\n");
 
-            #region 2.先组装附带参数
+            #region 2.把额外参数拼接并转化为bytes
 
-            if (body != null && body.Count > 0)
-            {
-                foreach (KeyValuePair<string, string> keyValuePair in body)
-                {
-                    var paramBuilder = new StringBuilder();
-                    paramBuilder.Append("--");
-                    paramBuilder.Append(strBoundary); //先添加分隔符
-                    paramBuilder.Append("\r\n");
-                    paramBuilder.Append("Content-Disposition: form-data; name=\"");
-                    paramBuilder.Append(keyValuePair.Key);
-                    paramBuilder.Append("\"");
-                    paramBuilder.Append("\r\n");
-                    paramBuilder.Append("\r\n");
-                    paramBuilder.Append(keyValuePair.Value); //name与value使用两个回车分隔
-                    paramBuilder.Append("\r\n"); //回车分割下一个参数
-                    var paramStr = paramBuilder.ToString();
-                    var paramByte = Encoding.UTF8.GetBytes(paramStr);
-                    memoryStream.Write(paramByte, 0, paramByte.Length); //写入内存流中
-                }
-            }
+            var bodyStr = CreateParam(body, strBoundary);
+            var bodyBytes = string.IsNullOrEmpty(bodyStr) ? new byte[0] : Encoding.UTF8.GetBytes(bodyStr);
+            memoryStream.Write(bodyBytes, 0, bodyBytes.Length);
 
             #endregion
 
             #region 3.组装上传文件
 
-            var fenge = "\r\n";
+            var i = 0;
+            var geffen = "\r\n";
             foreach (var key in files.AllKeys)
             {
                 var file = files[key];
                 if (file == null || file.ContentLength == 0) continue;
-                var sb = new StringBuilder();
-                sb.Append("--");
-                sb.Append(strBoundary); //分隔符
-                sb.Append("\r\n");
-                sb.Append("Content-Disposition: form-data; name=\"");
-                sb.Append(key); //一个文件对应一个name
-                sb.Append("\"; filename=\"");
-                sb.Append(file.FileName);
-                sb.Append("\"");
-                sb.Append("\r\n");
-                sb.Append("Content-Type: ");
-                sb.Append(file.ContentType);
-                sb.Append("\r\n");
-                sb.Append("\r\n");
-                var filePostHeader = sb.ToString();
-                var postHeaderBytes = Encoding.UTF8.GetBytes(filePostHeader);
-                memoryStream.Write(postHeaderBytes, 0, postHeaderBytes.Length); //先把文件头文件写入内存流中
-
-                var filecontent = new byte[file.ContentLength];
-
-                file.InputStream.Read(filecontent, 0, file.ContentLength); //把流转成byte
-
-                memoryStream.Write(filecontent, 0, filecontent.Length); //把文件写入内存流中
-                var bytes = Encoding.UTF8.GetBytes(fenge);
-                memoryStream.Write(bytes, 0, bytes.Length); //然后写入一个回车到流中，在重新写入新的文件不然两个文件会合并为一个
+                var fileHeaderStr = CreateFileHeader(strBoundary, key, file.FileName, file.ContentType);
+                var fileHeaderBytes = Encoding.UTF8.GetBytes(fileHeaderStr);
+                memoryStream.Write(fileHeaderBytes, 0, fileHeaderBytes.Length);
+                WriteFile(memoryStream, file.InputStream);//把文件写入内存流中
+                if (i != files.AllKeys.Length - 1)
+                {//只有不是最后一个文件流时才需要写入分割符                
+                    var bytes = Encoding.UTF8.GetBytes(geffen);
+                    memoryStream.Write(bytes, 0, bytes.Length); //然后写入一个回车到流中，在重新写入新的文件不然两个文件会合并为一个
+                }
+                i++;
             }
 
             #endregion
@@ -402,6 +373,77 @@ namespace MyHelper.Helper
 
             return request;
         }
+
+        /// <summary>
+        /// 拼接参数（上传file时使用）
+        /// </summary>
+        /// <param name="body">额外参数集合</param>
+        /// <param name="strBoundary">分割符</param>
+        /// <returns>参数+分割符拼接字符串</returns>
+        private static string CreateParam(Dictionary<string,string> body, string strBoundary)
+        {
+            if (body == null || body.Count <= 0) return string.Empty;
+            var paramBuilder = new StringBuilder();
+            foreach (KeyValuePair<string, string> keyValuePair in body)
+            {
+                paramBuilder.Append("--");
+                paramBuilder.Append(strBoundary); //先添加分隔符
+                paramBuilder.Append("\r\n");
+                paramBuilder.Append("Content-Disposition: form-data; name=\"");
+                paramBuilder.Append(keyValuePair.Key);
+                paramBuilder.Append("\"");
+                paramBuilder.Append("\r\n");
+                paramBuilder.Append("\r\n");
+                paramBuilder.Append(keyValuePair.Value); //name与value使用两个回车分隔
+                paramBuilder.Append("\r\n"); //回车分割下一个参数    
+            }
+            return paramBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 拼接file文件的文件头字符串
+        /// </summary>
+        /// <param name="strBoundary">分割符</param>
+        /// <param name="key">文件的name，接收方获取该文件的key</param>
+        /// <param name="fileName">文件全称带后缀</param>
+        /// <param name="fileContentType">文件的ContentType</param>
+        /// <returns></returns>
+        private static string CreateFileHeader(string strBoundary,string key,string fileName,string fileContentType)
+        {
+            var sb = new StringBuilder();
+            sb.Append("--");
+            sb.Append(strBoundary); //分隔符
+            sb.Append("\r\n");
+            sb.Append("Content-Disposition: form-data; name=\"");
+            sb.Append(key); //一个文件对应一个name
+            sb.Append("\"; filename=\"");
+            sb.Append(fileName);
+            sb.Append("\"");
+            sb.Append("\r\n");
+            sb.Append("Content-Type: ");
+            sb.Append(fileContentType);
+            sb.Append("\r\n");
+            sb.Append("\r\n");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 把File写入流中
+        /// </summary>
+        /// <param name="reqStream">写入的流</param>
+        /// <param name="fileStream">文件流</param>
+        /// <param name="bytes">每次写入流的大小，默认为4K</param>
+        private static void WriteFile(Stream reqStream, Stream fileStream, int bytes = 1024 * 4)
+        {
+            var buff = new byte[bytes]; //每次写入
+            var size = fileStream.Read(buff, 0, buff.Length);
+            while (size > 0)
+            {
+                reqStream.Write(buff, 0, size);
+                size = fileStream.Read(buff, 0, buff.Length);
+            }
+        }
+
         #endregion
 
 

@@ -86,7 +86,7 @@ namespace MyHelper.Helper
         /// <summary>
         /// 计算文件的hash值
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">文件目录地址</param>
         /// <returns></returns>
         public static string ComputeFileHash(string filePath)
         {
@@ -102,6 +102,18 @@ namespace MyHelper.Helper
             }
 
             return hashRes;
+        }
+
+        /// <summary>
+        /// 计算文件的hash值
+        /// </summary>
+        /// <param name="fileStream">文件流</param>
+        /// <returns></returns>
+        public static string ComputeFileHash(Stream fileStream)
+        {
+            var sha1 = SHA1.Create();
+            var buff = sha1.ComputeHash(fileStream);
+            return BitConverter.ToString(buff).Replace("-", "");
         }
 
         #endregion
