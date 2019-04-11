@@ -227,7 +227,6 @@ namespace MyHelper.Helper
                 var res = crytoTransform.TransformFinalBlock(inputByteArray, 0, inputByteArray.Length);
                 aes.Clear();
                 return Convert.ToBase64String(res, 0, res.Length).Replace("+", "%2B");
-                ;
             }
         }
 
