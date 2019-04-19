@@ -13,6 +13,8 @@ namespace ModelValid
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //注册全局异常处理Filter
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
         }
     }
 }

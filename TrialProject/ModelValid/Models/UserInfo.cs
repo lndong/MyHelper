@@ -11,9 +11,11 @@ namespace ModelValid.Models
 {
     public class UserInfo
     {
+
         [Display(Name ="用户名")]
         [Required(ErrorMessage ="请输入用户名")]
-        [Remote("ValidAccount","User","",ErrorMessage = "此账号已存在")]
+        //[Remote("ValidAccount","User","",ErrorMessage = "此账号已存在")]
+        [Remote("ValidAccount", ErrorMessage = "此账号已存在")]
         public string Account { get; set; }
 
         [Display(Name ="密码")]
@@ -45,6 +47,9 @@ namespace ModelValid.Models
         [Display(Name = "验证忽略")]
         [RegularExpression(ConstReg.PhoneReg, ErrorMessage = "手机号格式不正确")]
         public string IgnorePhone { get; set; }
+
+        [Display(Name = "验证码")]
+        public string VerifyCode { get; set; }
     }
 
     public enum GenderType

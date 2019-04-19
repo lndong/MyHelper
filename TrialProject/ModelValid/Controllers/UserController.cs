@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ModelValid.Models;
 using MyHelper.Extensions;
+using MyHelper.Helper;
 
 namespace ModelValid.Controllers
 {
@@ -56,6 +59,20 @@ namespace ModelValid.Controllers
                 return Json("该账号已存在", JsonRequestBehavior.AllowGet);
             }
             return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 构建图形验证码
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GenerateCode()
+        {
+            var code = CaptchaHelper.GeneratorMixtedCode(4);
+            var imageCode = (new ImageCodeHelper()).CreateImageCode(code);
+            Session["VerifyCode"] = code;
+            var ms = new MemoryStream();
+            imageCode.Save(ms,ImageFormat.Png);
+            return File(ms.ToArray(), "text/html");//返回text/html在浏览器中直接输入url会是二进制流，使用img或者css接收则是图片
         }
 
         /// <summary>
