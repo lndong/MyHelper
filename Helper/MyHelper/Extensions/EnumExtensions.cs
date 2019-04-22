@@ -42,6 +42,9 @@ namespace MyHelper.Extensions
             foreach (var item in nameStrs)
             {
                 var field = enumType.GetField(item);
+                //忽略带有MyIgnore特性的枚举值
+                var ignore = field.GetCustomAttribute(typeof(MyIgnoreAttribute), false);
+                if (ignore != null) continue;
                 //object[] arr = field.GetCustomAttributes(typeof(DescriptionAttribute), true);
                 //var description = arr.Length > 0 ? ((DescriptionAttribute)arr[0]).Description : item;
                 var description = GetDescription(field);
@@ -98,5 +101,14 @@ namespace MyHelper.Extensions
             var att = System.Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute), false);
             return att == null ? field.Name : ((DescriptionAttribute)att).Description;
         }
+    }
+
+    /// <summary>
+    /// 自定义忽略特性，加入此特性，在枚举转字典集合时忽略此属性
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public class MyIgnoreAttribute : Attribute
+    {
+        public MyIgnoreAttribute() { }
     }
 }
