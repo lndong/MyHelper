@@ -135,6 +135,7 @@
     <Compile Include="Helper\ExceptionHelper.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\FTPHelper.cs" />
+    <Compile Include="Helper\HttpClientUtility.cs" />
     <Compile Include="Helper\HttpWebHelper.cs" />
     <Compile Include="Helper\IamgeHelper.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
