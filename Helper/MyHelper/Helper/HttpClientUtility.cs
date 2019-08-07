@@ -95,8 +95,7 @@ namespace MyHelper.Helper
         public static string PostHttpRequest(string url, object entity)
         {
             var objStr = JsonConvert.SerializeObject(entity);
-            //var httpContent = new StringContent(objStr, Encoding.UTF8, "application/json");
-            var httpContent = new StringContent(objStr, Encoding.UTF8, "application/x-www-form-urlencoded");
+            var httpContent = new StringContent(objStr, Encoding.UTF8, "application/json");
             return PostHttpRequest(url, httpContent);
         }
 
